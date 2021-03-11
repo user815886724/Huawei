@@ -56,8 +56,11 @@ def add_VR(vr_type, vr_id):
 
 # 删除服务器
 def del_VR(vr_id):
-    # TODO 从VR_LIST删除虚拟机，如果当前的服务器没有部署虚拟机，则关闭-更改SERVER_RUN_LIST的状态
-    print()
+    # TODO 实施删除的具体操作方案
+
+    # 从 VR_LIST 删除虚拟机
+    VR_LIST.pop(vr_id)
+    # TODO 如果当前的服务器没有部署虚拟机，则关闭-更改 SERVER_RUN_LIST 的状态
 
 
 # 在服务器中分配虚拟机资源
@@ -88,14 +91,16 @@ def process_data_txt(data_path):
     index = 0
     # 循环读取文件
     while line:
-        # 第一个输入的是服务器的数量
+        # 第一个输入的是服务器类型
         if index == 0:
             server_size = int(line.strip())
             server_list = data_util.get_server_txt(file=f, server_size=server_size)
+        # 第二个输入的为虚拟机类型
         elif index == 1:
             vr_size = int(line.strip())
             vr_list, vr_type_dict = data_util.get_vr_txt(file=f, vr_size=vr_size)
             VR_TYPE_DICT.update(vr_type_dict)
+        # 第三个输入用户操作行为
         elif index == 2:
             day_size = int(line.strip())
             day_list = data_util.get_day_txt(file=f, day_size=day_size)
