@@ -83,3 +83,34 @@ def get_day_txt(file, day_size):
         days.append(day)
     return days
 
+
+# 扩容的策略
+def expansion_info(expansion_size):
+    print("(purchase, %d)" % expansion_size)
+
+
+# 购买信息输出
+def buy_info(server_name, server_num):
+    print("(%s, %d)" % (server_name, server_num))
+
+
+# 转移虚拟机个数信息
+def migrate_size_info(migrate_size):
+    print("(migration, %d)" % migrate_size)
+
+
+# 转移虚拟机信息
+def migrate_info(vr_id, server_id, server_node=None):
+    if server_node is None:
+        print("(%s, %s)" % (vr_id, server_id))
+    else:
+        print("(%s, %s, %s)" % (vr_id, server_id, server_node))
+
+
+# 部署当前请求的虚拟机
+def deploy_vr_info(server_id, server_node=None):
+    if server_node is None:
+        print("(%s)" % server_id)
+    else:
+        print("(%s, %s)" % (server_id, server_node))
+
