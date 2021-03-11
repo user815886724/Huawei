@@ -57,14 +57,16 @@ def get_server_txt(file, server_size):
     return server_list
 
 
-# 从txt中获得虚拟服务器的信息，返回虚拟服务器的列表
+# 从txt中获得虚拟服务器的信息，返回虚拟服务器的列表和具体需要返回的类型对应的查找列表
 def get_vr_txt(file, vr_size):
+    vr_type_dict = {}
     vr_list = []
     for i in range(vr_size):
         vr_str = file.readline()
         vr = Virtual_Server(vr_str)
         vr_list.append(vr)
-    return vr_list
+        vr_type_dict[vr.vr_name] = vr
+    return vr_list, vr_type_dict
 
 
 # 从txt中获得每天的操作序列，返回操作列表

@@ -1,8 +1,8 @@
 from utils import data_util, setting_util
 
-# 服务器信息：server_id- server
+# 当前购买的服务器信息：server_id- server
 SERVER_LIST = {}
-# 虚拟机信息 vr_id - vr
+# 当前用户存在的虚拟机信息 vr_id - vr
 VR_LIST = {}
 # 当前开机服务器：server_id - bool
 SERVER_RUN_LIST = {}
@@ -12,6 +12,9 @@ REST_SERVER_LIST = {}
 SERVER_VR = {}
 # 成本费用
 SERVER_COST, DAY_COST, TOTAL_COST = 0, 0, 0
+
+# 虚拟机根据类型查找对应的虚拟机机型（主要为了减少每次查询所需的遍历时间） vr_type - vr
+VR_TYPE_DICT = {}
 
 
 # 提取全部天的所有操作
@@ -25,26 +28,54 @@ def extract_op_days(day_list):
 # 用户对虚拟机操作
 # 添加服务器
 def add_VR(vr_type, vr_id):
-    print()
+    vr = VR_TYPE_DICT[vr_type]
+    # 选择所部署的服务器ID
+    server_id = choose_Server(vr)
+
+    # 服务器减去当前虚拟机的消耗放入 REST_SERVER_LIST
+    server = REST_SERVER_LIST[server_id]
+    server.cpu -= vr.cpu
+    server.memory -= vr.memory
+    if vr.is_double:
+        server.A_cpu -= int(vr.cpu / 2)
+        server.B_cpu -= int(vr.cpu / 2)
+        server.A_memory -= int(vr.A_memory / 2)
+        server.B_memory -= int(vr.B_memory / 2)
+    REST_SERVER_LIST[server_id] = server
+
+    # 虚拟机列表中增加虚拟机
+    VR_LIST[vr_id] = vr
+
+    # 在SERVER_VR中增加使用关系
+    if server_id not in SERVER_VR:
+        SERVER_VR[server_id] = []
+    vr_ids = SERVER_VR[server_id]
+    vr_ids.append(vr_id)
+    SERVER_VR[server_id] = vr_ids
 
 
 # 删除服务器
 def del_VR(vr_id):
+    # TODO 删除虚拟机，如果当前的服务器没有部署虚拟机，则关闭-加入
     print()
 
 
 # 在服务器中分配虚拟机资源
-def choose_Server(vr_id):
-    vr = VR_LIST[vr_id]
+def choose_Server(vr):
     for rest_server in REST_SERVER_LIST:
         if rest_server.cpu < vr.cpu or rest_server.memory < vr.memory:
             continue
         if vr.is_double:
-            print()
-        print()
+            if rest_server.A_cpu < int(vr.cpu / 2) or rest_server.B_cpu < int(vr.cpu / 2) or rest_server.A_memory < int(
+                    vr.memory / 2) or rest_server.B_memory < int(vr.memory / 2):
+                continue
+    # TODO 核心选择方案
     # 当前所剩没有合适的服务器，需要重新购置服务器。
     # 两种思路，一种是把根据每天的请求来进行每天的决策，进行选择购买的服务器（实现简单）
     # 第二种是需要从全局来看，先算出需要购买哪几个服务器，再根据每天成本均衡进行购买
+
+    # TODO 返回选择的服务器ID
+    return 0
 
 
 # 暂时模拟输入逐行读取txt文本
@@ -60,7 +91,8 @@ def process_data_txt(data_path):
             server_list = data_util.get_server_txt(file=f, server_size=server_size)
         elif index == 1:
             vr_size = int(line.strip())
-            vr_list = data_util.get_vr_txt(file=f, vr_size=vr_size)
+            vr_list, vr_type_dict = data_util.get_vr_txt(file=f, vr_size=vr_size)
+            VR_TYPE_DICT.update(vr_type_dict)
         elif index == 2:
             day_size = int(line.strip())
             day_list = data_util.get_day_txt(file=f, day_size=day_size)
@@ -68,7 +100,6 @@ def process_data_txt(data_path):
         index += 1
 
     # 核心算法处理
-
     # 关闭文件流
     f.close()
 
