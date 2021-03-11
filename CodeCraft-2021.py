@@ -30,7 +30,7 @@ def extract_op_days(day_list):
 def add_VR(server_list, vr_list, vr_type, vr_id):
     vr = VR_TYPE_DICT[vr_type]
     # 选择所部署的服务器ID
-    server_id = choose_Server(vr)
+    server_id, server_node = choose_Server(vr)
 
     # 服务器减去当前虚拟机的消耗放入 REST_SERVER_LIST
     server = REST_SERVER_LIST[server_id]
@@ -39,11 +39,17 @@ def add_VR(server_list, vr_list, vr_type, vr_id):
     if vr.is_double:
         server.A_cpu -= int(vr.cpu / 2)
         server.B_cpu -= int(vr.cpu / 2)
-        server.A_memory -= int(vr.A_memory / 2)
-        server.B_memory -= int(vr.B_memory / 2)
+        server.A_memory -= int(vr.memory / 2)
+        server.B_memory -= int(vr.memory / 2)
     else:
-        #
-        print()
+        # 对应部署在哪个节点需要指定 对应节点的cpu和memory需要减去
+        if server_node == 'A':
+            server.A_cpu -= int(vr.cpu)
+            server.A_memory -= int(vr.memory)
+        elif server_node == 'B':
+            server.B_cpu -= int(vr.cpu)
+            server.B_memory -= int(vr.memory)
+    # 更新REST表的内容
     REST_SERVER_LIST[server_id] = server
 
     # 虚拟机列表中增加虚拟机
@@ -86,8 +92,8 @@ def choose_Server(vr):
     # 第一种是把根据每天的请求来进行每天的决策，进行选择购买的服务器（实现简单）贪心算法
     # 第二种是需要从全局来看，先算出需要购买哪几个服务器，再根据每天成本均衡进行购买
 
-    # TODO 返回选择的服务器ID：server_id
-    return 0
+    # TODO 返回选择的服务器ID：server_id, server_node
+    return 0, 0
 
 
 # 暂时模拟输入逐行读取txt文本
