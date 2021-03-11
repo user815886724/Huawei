@@ -27,7 +27,7 @@ def extract_op_days(day_list):
 
 # 用户对虚拟机操作
 # 添加服务器
-def add_VR(vr_type, vr_id):
+def add_VR(server_list, vr_list, vr_type, vr_id):
     vr = VR_TYPE_DICT[vr_type]
     # 选择所部署的服务器ID
     server_id = choose_Server(vr)
