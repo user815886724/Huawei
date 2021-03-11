@@ -41,6 +41,9 @@ def add_VR(server_list, vr_list, vr_type, vr_id):
         server.B_cpu -= int(vr.cpu / 2)
         server.A_memory -= int(vr.A_memory / 2)
         server.B_memory -= int(vr.B_memory / 2)
+    else:
+        #
+        print()
     REST_SERVER_LIST[server_id] = server
 
     # 虚拟机列表中增加虚拟机
@@ -111,9 +114,32 @@ def process_data_txt(data_path):
         index += 1
 
     # TODO 核心算法处理
-
+    core_process(server_list, vr_list, day_list)
     # 关闭文件流
     f.close()
+
+
+# 此处为核心的调度算法处理
+def core_process(server_list, vr_list, day_list):
+    op_list = extract_op_days(day_list)
+    cost_memory = 0
+    cost_cpu = 0
+    max_memory = 0
+    max_cpu = 0
+    for op in op_list:
+        if op.operator == setting_util.OP_ADD:
+            vr = VR_TYPE_DICT[op.vr]
+            cost_cpu += vr.cpu
+            cost_memory += vr.memory
+
+            # TODO 需修改换为 add_VR
+            SERVER_LIST[op.vr_id] = vr
+        elif op.operator == setting_util.OP_DEL:
+            vr = SERVER_LIST.pop(op.vr_id)
+            cost_memory -= vr.memory
+            cost_cpu -= vr.cpu
+    print("cpu：", cost_cpu)
+    print("memory：", cost_memory)
 
 
 if __name__ == "__main__":

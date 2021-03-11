@@ -38,12 +38,12 @@ class Operators:
         op_str = op_str.strip().strip('(').strip(')')
         try:
             (operator, vr, vr_id) = op_str.split(",")
-            self.operator = operator
-            self.vr = vr
+            self.operator = operator.strip()
+            self.vr = vr.strip()
             self.vr_id = int(vr_id)
         except ValueError:
             (operator, vr_id) = op_str.split(",")
-            self.operator = operator
+            self.operator = operator.strip()
             self.vr_id = int(vr_id)
 
 
