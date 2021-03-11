@@ -127,25 +127,8 @@ def process_data_txt(data_path):
 
 # 此处为核心的调度算法处理
 def core_process(server_list, vr_list, day_list):
-    op_list = extract_op_days(day_list)
-    cost_memory = 0
-    cost_cpu = 0
-    max_memory = 0
-    max_cpu = 0
-    for op in op_list:
-        if op.operator == setting_util.OP_ADD:
-            vr = VR_TYPE_DICT[op.vr]
-            cost_cpu += vr.cpu
-            cost_memory += vr.memory
-
-            # TODO 需修改换为 add_VR
-            SERVER_LIST[op.vr_id] = vr
-        elif op.operator == setting_util.OP_DEL:
-            vr = SERVER_LIST.pop(op.vr_id)
-            cost_memory -= vr.memory
-            cost_cpu -= vr.cpu
-    print("cpu：", cost_cpu)
-    print("memory：", cost_memory)
+    # TODO 写核心算法流程
+    print()
 
 
 if __name__ == "__main__":
