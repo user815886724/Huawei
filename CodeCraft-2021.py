@@ -56,12 +56,13 @@ def add_VR(vr_type, vr_id):
 
 # 删除服务器
 def del_VR(vr_id):
-    # TODO 删除虚拟机，如果当前的服务器没有部署虚拟机，则关闭-加入
+    # TODO 从VR_LIST删除虚拟机，如果当前的服务器没有部署虚拟机，则关闭-更改SERVER_RUN_LIST的状态
     print()
 
 
 # 在服务器中分配虚拟机资源
 def choose_Server(vr):
+    # 先从当前的剩余服务器列表中查找可部署
     for rest_server in REST_SERVER_LIST:
         if rest_server.cpu < vr.cpu or rest_server.memory < vr.memory:
             continue
@@ -69,12 +70,14 @@ def choose_Server(vr):
             if rest_server.A_cpu < int(vr.cpu / 2) or rest_server.B_cpu < int(vr.cpu / 2) or rest_server.A_memory < int(
                     vr.memory / 2) or rest_server.B_memory < int(vr.memory / 2):
                 continue
+
     # TODO 核心选择方案
     # 当前所剩没有合适的服务器，需要重新购置服务器。
-    # 两种思路，一种是把根据每天的请求来进行每天的决策，进行选择购买的服务器（实现简单）
+    # 两种思路，
+    # 第一种是把根据每天的请求来进行每天的决策，进行选择购买的服务器（实现简单）贪心算法
     # 第二种是需要从全局来看，先算出需要购买哪几个服务器，再根据每天成本均衡进行购买
 
-    # TODO 返回选择的服务器ID
+    # TODO 返回选择的服务器ID：server_id
     return 0
 
 
@@ -99,7 +102,8 @@ def process_data_txt(data_path):
         line = f.readline()
         index += 1
 
-    # 核心算法处理
+    # TODO 核心算法处理
+
     # 关闭文件流
     f.close()
 
