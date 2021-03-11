@@ -1,6 +1,6 @@
 from utils import data_util, setting_util
 
-# 当前购买的服务器信息：server_id- server
+# 当前购买的服务器信息：server_id - server
 SERVER_LIST = {}
 # 当前用户存在的虚拟机信息 vr_id - vr
 VR_LIST = {}
@@ -60,7 +60,10 @@ def del_VR(vr_id):
 
     # 从 VR_LIST 删除虚拟机
     VR_LIST.pop(vr_id)
-    # TODO 如果当前的服务器没有部署虚拟机，则关闭-更改 SERVER_RUN_LIST 的状态
+    # 如果当前的服务器没有部署虚拟机，则关闭-更改SERVER_RUN_LIST的状态
+    free_server = SERVER_VR.keys() ^ SERVER_RUN_LIST.keys()
+    for server_id in free_server:
+        SERVER_RUN_LIST[server_id] = False
 
 
 # 在服务器中分配虚拟机资源
