@@ -5,7 +5,11 @@ class Server:
         (server_model, cpu, memory, hardware_cost, day_cost) = server_str.split(",")
         self.server_model = server_model
         self.cpu = int(cpu)
+        self.A_cpu = int(cpu) / 2
+        self.B_cpu = int(cpu) / 2
         self.memory = int(memory)
+        self.A_memory = int(memory) / 2
+        self.B_memory = int(memory) / 2
         self.hardware_cost = int(hardware_cost)
         self.day_cost = int(day_cost)
 
@@ -16,9 +20,9 @@ class Virtual_Server:
         vr_str = vr_str.strip().strip('(').strip(')')
         (vr_name, cpu, memory, is_double) = vr_str.split(",")
         self.vr_name = vr_name
-        self.cpu = cpu
-        self.memory = memory
-        self.is_double = is_double
+        self.cpu = int(cpu)
+        self.memory = int(memory)
+        self.is_double = bool(is_double)
 
 
 # 自定义天数存放操作类
@@ -36,11 +40,11 @@ class Operators:
             (operator, vr, vr_id) = op_str.split(",")
             self.operator = operator
             self.vr = vr
-            self.vr_id = vr_id
+            self.vr_id = int(vr_id)
         except ValueError:
             (operator, vr_id) = op_str.split(",")
             self.operator = operator
-            self.vr_id = vr_id
+            self.vr_id = int(vr_id)
 
 
 # 从txt中读取服务器信息，返回服务器列表
@@ -77,13 +81,3 @@ def get_day_txt(file, day_size):
         days.append(day)
     return days
 
-
-# 提取全部天的所有操作
-def extract_op_days(day_list):
-    op_list = []
-    for day in day_list:
-        op_list += day.op_list
-    return op_list
-
-
-# 用户对虚拟机操作
